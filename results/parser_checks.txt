@@ -1,0 +1,3 @@
+PASS Flat PolicySet and per-policy rule order
+PASS Nested PolicySet is outside the supported fragment
+PASS Unsupported combining algorithm:

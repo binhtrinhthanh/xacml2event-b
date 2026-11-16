@@ -1,0 +1,7 @@
+model,generated,automatic,interactive,open,automatic_rate_percent,final_rate_percent
+XACML_Ctx,0,0,0,0,,
+XACML_Ref1_Ctx,1,1,0,0,100.00,100.00
+XACML_AbsMach,4,4,0,0,100.00,100.00
+XACML_Ref1_Mach,30,22,8,0,73.33,100.00
+XACML_Ref2_Mach,32,22,10,0,68.75,100.00
+Total,67,49,18,0,73.13,100.00

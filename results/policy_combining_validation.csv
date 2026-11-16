@@ -1,0 +1,5 @@
+algorithm,permit,deny,not_applicable,agreements,matching_target_cases
+PermitOverrides,440,180,60,680,680
+DenyOverrides,180,440,60,680,680
+FirstApplicable,310,310,60,680,680
+Total,930,930,180,2040,2040
