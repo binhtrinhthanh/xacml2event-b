@@ -329,16 +329,28 @@ EVENTS
         END
 """); combineEvents(b,true); return b.append("END\n").toString(); }
         private static void combineEvents(StringBuilder b,boolean refine){
-            event(b,"Combine_PermitOverrides_Permit",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = PermitOverrides\n            grd3: ∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Permit","Permit",false);
-            event(b,"Combine_PermitOverrides_Deny",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = PermitOverrides\n            grd3: ¬(∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Permit)\n            grd4: ∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Deny","Deny",false);
-            event(b,"Combine_PermitOverrides_NotApplicable",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = PermitOverrides\n            grd3: appl_rules ∩ policies(pol) = ∅","NotApplicable",false);
-            event(b,"Combine_DenyOverrides_Deny",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = DenyOverrides\n            grd3: ∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Deny","Deny",false);
-            event(b,"Combine_DenyOverrides_Permit",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = DenyOverrides\n            grd3: ¬(∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Deny)\n            grd4: ∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Permit","Permit",false);
-            event(b,"Combine_DenyOverrides_NotApplicable",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = DenyOverrides\n            grd3: appl_rules ∩ policies(pol) = ∅","NotApplicable",false);
-            b.append("    ApplyCombining_FirstApplicable\n"); if(refine)b.append("        REFINES ApplyRule\n"); b.append("        ANY pol r\n        WHERE\n            grd1: pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = FirstApplicable\n            grd3: r ∈ appl_rules ∧ r ∈ policies(pol)\n            grd4: ∀s·s ∈ policies(pol) ∧ s ∈ appl_rules ⇒ rule_order(pol)(r) ≤ rule_order(pol)(s)\n        THEN\n            act1: decision ≔ effect(r)\n        END\n");
-            event(b,"Combine_FirstApplicable_NotApplicable",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = FirstApplicable\n            grd3: appl_rules ∩ policies(pol) = ∅","NotApplicable",false);
+            event(b,"Combine_PermitOverrides_Permit",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = PermitOverrides\n            grd3: ∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Permit","Permit");
+            event(b,"Combine_PermitOverrides_Deny",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = PermitOverrides\n            grd3: ¬(∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Permit)\n            grd4: ∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Deny","Deny");
+            event(b,"Combine_PermitOverrides_NotApplicable",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = PermitOverrides\n            grd3: appl_rules ∩ policies(pol) = ∅","NotApplicable");
+            event(b,"Combine_DenyOverrides_Deny",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = DenyOverrides\n            grd3: ∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Deny","Deny");
+            event(b,"Combine_DenyOverrides_Permit",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = DenyOverrides\n            grd3: ¬(∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Deny)\n            grd4: ∃r·r ∈ appl_rules ∧ r ∈ policies(pol) ∧ effect(r) = Permit","Permit");
+            event(b,"Combine_DenyOverrides_NotApplicable",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = DenyOverrides\n            grd3: appl_rules ∩ policies(pol) = ∅","NotApplicable");
+            appendEventHeader(b, "ApplyCombining_FirstApplicable", refine); b.append("        ANY pol r\n        WHERE\n            grd1: pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = FirstApplicable\n            grd3: r ∈ appl_rules ∧ r ∈ policies(pol)\n            grd4: ∀s·s ∈ policies(pol) ∧ s ∈ appl_rules ⇒ rule_order(pol)(r) ≤ rule_order(pol)(s)\n        THEN\n            act1: decision ≔ effect(r)\n        END\n");
+            event(b,"Combine_FirstApplicable_NotApplicable",refine,"pol ∈ appl_policies\n            grd2: combining_alg_policy(pol) = FirstApplicable\n            grd3: appl_rules ∩ policies(pol) = ∅","NotApplicable");
         }
-        private static void event(StringBuilder b,String n,boolean ref,String guards,String decision,boolean unused){ b.append("    ").append(n).append("\n"); if(ref)b.append("        REFINES ApplyRule\n"); b.append("        ANY pol\n        WHERE\n            grd1: ").append(guards).append("\n        THEN\n            act1: decision ≔ ").append(decision).append("\n        END\n"); }
+        private static void event(StringBuilder b, String name, boolean refine, String guards, String decision) {
+            appendEventHeader(b, name, refine);
+            b.append("        ANY pol\n        WHERE\n            grd1: ").append(guards)
+             .append("\n        THEN\n            act1: decision ≔ ").append(decision)
+             .append("\n        END\n");
+        }
+
+        private static void appendEventHeader(StringBuilder b, String name, boolean refine) {
+            b.append("    ").append(name).append('\n');
+            if (refine) {
+                b.append("        REFINES ").append(name).append('\n');
+            }
+        }
     }
 
     private static List<Element> children(Element p,String wanted){ List<Element> r=new ArrayList<>(); NodeList ns=p.getChildNodes(); for(int i=0;i<ns.getLength();i++)if(ns.item(i) instanceof Element e && wanted.equals(local(e)))r.add(e); return r; }
