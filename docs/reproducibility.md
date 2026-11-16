@@ -39,7 +39,9 @@ The checks cover rejection of a nested PolicySet and rejection of a
 PolicySet specifying `only-one-applicable`. The regression check accepts a
 flat PolicySet with two policies and verifies that the generated rule-order
 maps are restricted to each policy's own rules. The generator uses a partial
-function over the global rule set and constrains its domain for each policy.
+function over the global rule set and constrains its domain for each policy. The check also verifies that all eight combining
+events in the generated second refinement refer to matching events in its
+parent machine.
 
 ## Original conversion and proof results
 
